@@ -6,7 +6,6 @@ package com.abdulmuqeethmohammed.todoapp;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,23 +17,24 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FloatingActionButton fab1;
-    ListView mainPageList;
-    ArrayList<String> arrayList;
-    ArrayAdapter<String> arrayAdapter;
+    private FloatingActionButton addTaskButton;
+    private ListView mainPageList;
+    private ArrayList<String> arrayList;
+    private ArrayAdapter<String> arrayAdapter;
     private String taskDetails;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(getClass().getSimpleName(), "Inside oOCreate");
         super.onCreate(savedInstanceState);
+        setTitle(R.string.main_activity_title);
         setContentView(R.layout.activity_main);
 
-        fab1 = (FloatingActionButton) findViewById(R.id.addButton);
-        fab1.setOnClickListener(addActivity);
+        addTaskButton = (FloatingActionButton) findViewById(R.id.addButton);
+        addTaskButton.setOnClickListener(addActivity);
 
         mainPageList = (ListView) findViewById(R.id.listViewMain);
         arrayList = new ArrayList<>();
-        arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrayList);
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
         //Linking the ListView to the ArrayAdapter
         mainPageList.setAdapter(arrayAdapter);
     }
@@ -43,39 +43,39 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener addActivity = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Log.i(MainActivity.this.getClass().getSimpleName(),"Add Button Clicked");
             switchToTaskDetails();
         }
     };
 
     //Using an intent to start TaskDetailsActivity for result
-    private void switchToTaskDetails(){
-        Intent i = new Intent(MainActivity.this, TaskDetailsActivity.class);
-        MainActivity.this.startActivityForResult(i, AppConstants.REQUEST_CODE);
+    private void switchToTaskDetails() {
+        Intent startTaskActivityIntent = new Intent(MainActivity.this, TaskDetailsActivity.class);
+        MainActivity.this.startActivityForResult(startTaskActivityIntent, AppConstants.REQUEST_CODE);
     }
 
+    //After returning from sub activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //Checking if we are returning from TaskDetailsActivity
         if(requestCode==AppConstants.REQUEST_CODE){
+            //When data is returned from TaskDetailsActivity
             if(resultCode==RESULT_OK){
                 try {
-                    taskDetails = data.getStringExtra(AppConstants.TAG);
-                    Log.i(MainActivity.this.getClass().getSimpleName(), "Task Details Retrieved");
+                    taskDetails = data.getStringExtra(AppConstants.TASK_DETAILS_KEY);
                 }catch (NullPointerException e){
-                    Log.i(AppConstants.EXCEPTION_TAG, "Null Pointer");
+                    Log.i(AppConstants.EXCEPTION_TAG, "NULL POINTER");
                 }
                 arrayList.add(taskDetails);
-                arrayAdapter.notifyDataSetChanged();
-
+                //arrayAdapter.notifyDataSetChanged();
             }
+            //When no data is returned from TaskDetailsActivity
             else if(resultCode==RESULT_CANCELED){
-                Log.i("Result Code", "CANCELLED");
+                Log.i(AppConstants.RESULT_CODE_CHECK, "CANCELLED");
             }
         }
         else {
-            Log.i(AppConstants.REQUEST_CODE_CHECK,AppConstants.REQUEST_CODE_FAIL);
+            Log.i(AppConstants.REQUEST_CODE_CHECK, "INCORRECT");
         }
-
     }
 }
