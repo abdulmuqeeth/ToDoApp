@@ -5,19 +5,16 @@ package com.abdulmuqeethmohammed.todoapp;
  */
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 
 public class TaskDetailsActivity extends AppCompatActivity {
 
     private EditText taskDetails;
-    private FloatingActionButton submitTaskButton;
     private String retrievedData;
 
     @Override
@@ -27,9 +24,6 @@ public class TaskDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_task_details);
 
         taskDetails = (EditText) findViewById(R.id.taskDetails);
-        submitTaskButton = (FloatingActionButton) findViewById(R.id.submitTaskButton);
-
-        submitTaskButton.setOnClickListener(submitButton);
     }
 
     public boolean onCreateOptionsMenu (Menu menu) {
@@ -38,25 +32,26 @@ public class TaskDetailsActivity extends AppCompatActivity {
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem menuItem){
-        //TODO respond to menu item selecetion
-        return true;
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch(menuItem.getItemId()) {
+            case R.id.saveOption:
+                retrieveData();
+                return true;
+        }
+        return false;
     }
 
-    //Capturing the text and returning to calling activity when done button is pressed
-    private View.OnClickListener submitButton = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent retrievedIntent = getIntent();
-            retrievedData = taskDetails.getText().toString().trim();
-            if(retrievedData.isEmpty()) {
-                    setResult(RESULT_CANCELED, retrievedIntent);
-            }
-            else {
-                    setResult(RESULT_OK, retrievedIntent);
-                    retrievedIntent.putExtra(AppConstants.TASK_DETAILS_KEY, retrievedData);
-            }
-            finish();
+    //Capturing the text and returning to calling activity when save button is pressed
+        private void retrieveData() {
+        Intent retrievedIntent = getIntent();
+        retrievedData = taskDetails.getText().toString().trim();
+        if(retrievedData.isEmpty()) {
+            setResult(RESULT_CANCELED, retrievedIntent);
         }
-    };
+        else {
+            setResult(RESULT_OK, retrievedIntent);
+            retrievedIntent.putExtra(AppConstants.TASK_DETAILS_KEY, retrievedData);
+        }
+        finish();
+    }
 }
