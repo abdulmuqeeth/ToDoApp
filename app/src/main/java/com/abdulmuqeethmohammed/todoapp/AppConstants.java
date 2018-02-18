@@ -10,4 +10,7 @@ public class AppConstants {
     public static final String EXCEPTION_TAG = "Exception";
     public static final String REQUEST_CODE_CHECK = "REQUEST_CODE_CHECK";
     public static final String RESULT_CODE_CHECK = "RESULT_CODE_CHECK";
+    public static final String DB_NAME = "TODO_DB";
+    public static final String TABLE_NAME = "TASK_TABLE";
+    public static final String TASK_COLUMN_NAME  = "TASK_DETAILS";
 }

@@ -4,4 +4,8 @@
     <string name= "main_activity_title">TO-DO TASKS</string>
     <string name= "task_activity_title">TASK DETAILS</string>
     <string name="menu_save">Save</string>
+    <string name="db_name">TodoDb</string>
+    <string name="task_table_name">TaskTable</string>
+    <string name="task_column_name">TaskDetails</string>
+
 </resources>
