@@ -22,13 +22,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String query = String.format("Create TABLE %s (ID INTEGER PRIMARY KEY, AUTOINCREMENT, %s TEXT NOT NULL", AppConstants.TABLE_NAME, AppConstants.TASK_COLUMN_NAME);
+        String query = String.format("Create TABLE %s (ID INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT NOT NULL);", AppConstants.TABLE_NAME, AppConstants.TASK_COLUMN_NAME);
         db.execSQL(query);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String query = String.format("DELETE TABLE IF EXISTS %s", AppConstants.TABLE_NAME);
+        String query = String.format("DELETE TABLE IF EXISTS %s;", AppConstants.TABLE_NAME);
         db.execSQL(query);
         onCreate(db);
     }

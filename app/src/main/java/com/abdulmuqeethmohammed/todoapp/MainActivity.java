@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    DbHelper dbHelper;
     private FloatingActionButton addTaskButton;
     private ListView mainPageList;
     private ArrayList<String> arrayList;
@@ -29,14 +30,12 @@ public class MainActivity extends AppCompatActivity {
         setTitle(R.string.main_activity_title);
         setContentView(R.layout.activity_main);
 
+        dbHelper = new DbHelper(this);
+        mainPageList = (ListView) findViewById(R.id.listViewMain);
         addTaskButton = (FloatingActionButton) findViewById(R.id.addButton);
         addTaskButton.setOnClickListener(addActivity);
 
-        mainPageList = (ListView) findViewById(R.id.listViewMain);
-        arrayList = new ArrayList<>();
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
-        //Linking the ListView to the ArrayAdapter
-        mainPageList.setAdapter(arrayAdapter);
+        loadTasks();
     }
 
     //OnClickListener for addActivity Button
@@ -66,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 }catch (NullPointerException e){
                     Log.i(AppConstants.EXCEPTION_TAG, "NULL POINTER");
                 }
-                arrayList.add(taskDetails);
-                //arrayAdapter.notifyDataSetChanged();
+                dbHelper.insertNewTask(taskDetails);
+                loadTasks();
             }
             //When no data is returned from TaskDetailsActivity
             else if(resultCode==RESULT_CANCELED){
@@ -76,6 +75,21 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             Log.i(AppConstants.REQUEST_CODE_CHECK, "INCORRECT");
+        }
+    }
+
+    //Method to load tasks from DB and display on the list
+    private void loadTasks() {
+        arrayList = dbHelper.getTaskList();
+        if (arrayAdapter == null) {
+            arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
+            //Linking the ListView to the ArrayAdapter
+            mainPageList.setAdapter(arrayAdapter);
+        }
+        else {
+            arrayAdapter.clear();
+            arrayAdapter.addAll(arrayList);
+            arrayAdapter.notifyDataSetChanged();
         }
     }
 }
